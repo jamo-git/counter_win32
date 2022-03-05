@@ -9,6 +9,7 @@ The application will run on a window and show current time in `HH:mm:ss` format 
 What to do:
 - [x] GUI with components
 - [x] Current time and timer
-- [ ] Bugfix: Times are sometimes messing up
-- [ ] Use minutes too for timer, format checking
+- [x] Bugfix: Times are sometimes messing up
+- [x] Use minutes too for timer, format checking
+- [ ] Alert if timer given in incorrect format
 - [ ] Alert when timer is completed
