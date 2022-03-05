@@ -1,5 +1,3 @@
-#pragma once
-
 #ifndef UNICODE
 #define UNICODE
 #endif
@@ -39,7 +37,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
         WS_OVERLAPPEDWINDOW, // Window style
 
         // Size and position
-        CW_USEDEFAULT, CW_USEDEFAULT, 200, 150,
+        CW_USEDEFAULT, CW_USEDEFAULT, 430, 150,
 
         NULL,      // Parent window
         NULL,      // Menu
@@ -80,10 +78,10 @@ void UpdateUI(HWND hwnd) {
     FillRect(hdc, &ps.rcPaint, (HBRUSH)(COLOR_WINDOW + 1));
 
     TextOut(hdc, 10, 0, L"Time now", 9);
-    TextOut(hdc, 90, 0, L"Time then", 10);
+    TextOut(hdc, 170, 0, L"Time then", 10);
     TextOut(hdc, 10, 60, L"Timer", 6);
     TextOut(hdc, 10, 20, timer.getCurrentTime(), lstrlen(timer.getCurrentTime()));
-    TextOut(hdc, 90, 20, timer.getTimerTime(), lstrlen(timer.getTimerTime()));
+    TextOut(hdc, 170, 20, timer.getTimerTime(), lstrlen(timer.getTimerTime()));
     
     EndPaint(hwnd, &ps);
 }
@@ -115,10 +113,8 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
                 LPWSTR input;
                 TCHAR buff[1024];
                 GetWindowText(TextBox, buff, 1024);
-                if (timer.validateInput(buff)) {
-                    printf("Validation passed");
-                } else {
-                    printf("Not valid!");
+                if (!timer.validateInput(buff)) {
+                    printf("Not valid!\n");
                 }
             }
             break;

@@ -1,5 +1,9 @@
 #include "timer.h"
 
+#define TIMELOCALE LOCALE_SYSTEM_DEFAULT
+#define TIMEFORMAT TIME_FORCE24HOURFORMAT | TIME_NOTIMEMARKER
+
+
 LPCWSTR Timer::getCurrentTime() {
     currentTime = getTimeNow();
     return currentTime.c_str();
@@ -11,31 +15,35 @@ LPCWSTR Timer::getTimerTime() {
 }
 
 bool Timer::validateInput(TCHAR* buff) {
-    std::wstring tmpInput(&buff[0]);
+    const std::wstring tmpInput(&buff[0]);
+    const std::string input(tmpInput.begin(), tmpInput.end());
 
-    std::regex inputValidatorRx("^\\d+\\:?\\.?\\d+$");
+    const std::regex inputRegex("^\\d+(\\:|\\.)\\d+$");
 
-    // if (std::regex_match(tmpInput.begin(), tmpInput.end(), inputValidatorRx)) {
-    //     printf("Regex match!");
-    //     setTimerTime(tmpInput);
-    //     return true;
-    // } else {
-    //     return false;
-    // }
-    return true;
+    if (std::regex_match(input, inputRegex)) {
+        std::smatch captureNumbers;
+        std::regex_search(input, captureNumbers, std::regex("^(\\d+).(\\d+)$"));
+        // for (int i = 0; i < captureNumbers.size(); i++) {
+        //     printf("%d is %s\n", i, captureNumbers[i].str().c_str());
+        // }
+        int hours, minutes;
+        hours = std::stoi(captureNumbers[1].str().c_str());
+        minutes = std::stoi(captureNumbers[2].str().c_str());
+        convertTime(hours, minutes);
+        return true;
+    } else {
+        return false;
+    }
 }
 
 std::wstring Timer::getTimeNow() {
     wchar_t time[32];
-    GetTimeFormat(LOCALE_SYSTEM_DEFAULT, TIME_FORCE24HOURFORMAT | TIME_NOTIMEMARKER, NULL, NULL, time, 32);
+    GetTimeFormat(LOCALE_SYSTEM_DEFAULT, TIME_FORCE24HOURFORMAT | TIME_NOTIMEMARKER,
+        NULL, NULL, time, sizeof(time));
     return time;
 }
 
-void Timer::setTimerTime(std::wstring input) {
-    // TODO: Convert input to ints and pass to convertTime -> save to timerTime
-}
-
-std::wstring Timer::convertTime(int hours, int minutes) {
+void Timer::convertTime(int hours, int minutes) {
     SYSTEMTIME st = {0};
     FILETIME ft = {0};
 
@@ -67,7 +75,8 @@ std::wstring Timer::convertTime(int hours, int minutes) {
     wprintf(L"%02d/%02d/%04d %02d:%02d:%02d\n",
         st.wDay, st.wMonth, st.wYear, st.wHour, st.wMinute, st.wSecond);
 
-    GetTimeFormat(LOCALE_SYSTEM_DEFAULT, TIME_FORCE24HOURFORMAT | TIME_NOTIMEMARKER, &st, NULL, timeBuff, 32);
+    GetTimeFormat(LOCALE_SYSTEM_DEFAULT, TIME_FORCE24HOURFORMAT | TIME_NOTIMEMARKER,
+        &st, NULL, timeBuff, sizeof(timeBuff));
 
-    return timeBuff;
+    timerTime = timeBuff;
 }
