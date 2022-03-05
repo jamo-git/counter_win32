@@ -1,2 +1,2 @@
 all:
-	g++ -o main.exe main.cpp -municode -lgdi32
+	g++ -Iinclude src/*.h -o bin/main.exe src/*.cpp -municode -lgdi32
