@@ -37,7 +37,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
         WS_OVERLAPPEDWINDOW, // Window style
 
         // Size and position
-        CW_USEDEFAULT, CW_USEDEFAULT, 430, 150,
+        CW_USEDEFAULT, CW_USEDEFAULT, 280, 150,
 
         NULL,      // Parent window
         NULL,      // Menu
@@ -78,16 +78,25 @@ void UpdateUI(HWND hwnd) {
     FillRect(hdc, &ps.rcPaint, (HBRUSH)(COLOR_WINDOW + 1));
 
     TextOut(hdc, 10, 0, L"Time now", 9);
-    TextOut(hdc, 170, 0, L"Time then", 10);
+    TextOut(hdc, 130, 0, L"Time then", 10);
     TextOut(hdc, 10, 60, L"Timer", 6);
     TextOut(hdc, 10, 20, timer.getCurrentTime(), lstrlen(timer.getCurrentTime()));
-    TextOut(hdc, 170, 20, timer.getTimerTime(), lstrlen(timer.getTimerTime()));
+    TextOut(hdc, 130, 20, timer.getTimerTime(), lstrlen(timer.getTimerTime()));
     
     EndPaint(hwnd, &ps);
 }
 
 void RestartTimer(HWND hwnd) {
     SetTimer(hwnd, TimerId, 1000, NULL);
+}
+
+void CompareTimes(HWND hwnd) {
+    std::wstring value1, value2;
+    value1 = timer.getCurrentTime();
+    value2 = timer.getTimerTime();
+    if (value1 == value2) {
+        MessageBox(hwnd, L"Notice!\nTime is up!", L"Info", MB_OK | MB_ICONINFORMATION);
+    }
 }
 
 LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -99,10 +108,11 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
                         10, 80, 60, 20, hwnd, (HMENU) 1, NULL, NULL);
 
             ActButton = CreateWindow(L"BUTTON", L"Set", WS_VISIBLE | WS_CHILD | WS_BORDER,
-                         100, 80, 65, 21, hwnd, (HMENU)BTN_SET_PRESS, NULL, NULL);
+                         130, 80, 65, 21, hwnd, (HMENU)BTN_SET_PRESS, NULL, NULL);
 
         case WM_TIMER:
             RestartTimer(hwnd);
+            CompareTimes(hwnd);
 
         case WM_PAINT:
             UpdateUI(hwnd);
@@ -114,7 +124,7 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
                 TCHAR buff[1024];
                 GetWindowText(TextBox, buff, 1024);
                 if (!timer.validateInput(buff)) {
-                    printf("Not valid!\n");
+                    MessageBox(hwnd, L"Invalid format!\nUse hh:mm", NULL, MB_OK | MB_ICONERROR);
                 }
             }
             break;
