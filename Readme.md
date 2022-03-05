@@ -11,5 +11,5 @@ What to do:
 - [x] Current time and timer
 - [x] Bugfix: Times are sometimes messing up
 - [x] Use minutes too for timer, format checking
-- [ ] Alert if timer given in incorrect format
-- [ ] Alert when timer is completed
+- [x] Alert if timer given in incorrect format
+- [x] Alert when timer is completed
