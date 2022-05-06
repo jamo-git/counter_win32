@@ -15,3 +15,8 @@ jobs:
       run: mkdir ${{github.workspace}}\bin
     - name: make
       run: make
+    - name: Upload artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: Main executable
+        path: bin\main.exe
