@@ -1,2 +1,2 @@
 all:
-	g++ -Iinclude src/*.h -o bin/main.exe src/*.cpp -municode -lgdi32
+	g++ -Iinclude src/*.h -o bin/counter.exe src/*.cpp -mwindows -municode -lgdi32
