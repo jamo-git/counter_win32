@@ -11,5 +11,7 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+    - name: Create bin directory
+      run: mkdir ${{github.workspace}}/build
     - name: make
       run: make
